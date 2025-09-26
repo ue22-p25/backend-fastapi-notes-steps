@@ -1,4 +1,4 @@
-VERSION = "03b"
+VERSION = "04"
 
 from contextlib import asynccontextmanager
 from typing import Annotated
@@ -10,6 +10,7 @@ from fastapi import Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi import Request
 from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from sqlmodel import SQLModel, create_engine
@@ -55,8 +56,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 async def root():
-    return dict(message="Hello FastAPI World!",
-                version=VERSION)
+    return RedirectResponse(url="/front/notes")
 
 """
 http :8000/api/notes title="Devoirs" description="TP Backend"
@@ -109,4 +109,4 @@ def notes_page(request: Request, session: SessionDep):
     return templates.TemplateResponse(
         request=request,
         name="notes.html.j2",
-        context={"notes": notes})
+        context={"version": VERSION, "notes": notes})
